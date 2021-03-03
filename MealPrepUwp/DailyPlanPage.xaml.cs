@@ -67,7 +67,11 @@ namespace MealPrepUwp
 
             using (var db = new ApplicationDbContext())
             {
-                db.DailyDishes.RemoveRange(selectedPlan.DailyDishes);
+                if (selectedPlan.DailyDishes != null)
+                {
+                    db.DailyDishes.RemoveRange(selectedPlan.DailyDishes);
+                }
+
                 db.Remove(selectedPlan);
                 db.SaveChanges();
             }

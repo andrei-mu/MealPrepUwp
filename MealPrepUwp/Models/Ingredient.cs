@@ -12,7 +12,8 @@ namespace MealPrepUwp.Models
         HundredGrams,
         HundredMl,
         Piece,
-        Slice
+        Slice,
+        Bottle
     };
 
     public class Ingredient

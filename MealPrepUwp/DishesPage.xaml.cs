@@ -39,7 +39,7 @@ namespace MealPrepUwp
 
         private void UpdateSelectedDish(ApplicationDbContext db)
         {
-            var selectedDish = GetSelectedDish();
+            var selectedDish = GetSelectedDish;
 
             if (selectedDish == null)
             {
@@ -56,6 +56,7 @@ namespace MealPrepUwp
             DishesIngredientsList.ItemsSource = dish?.IngredientQuantities;
 
             TotalCaloriesText.Text = dish?.CalorieCount.ToString() ?? "0";
+            ServingsCountText.Text = dish?.ServingsPerDish.ToString() ?? "0";
             ServingCaloresText.Text = dish?.CaloriePerServingCount.ToString() ?? "0";
 
         }
@@ -97,7 +98,7 @@ namespace MealPrepUwp
 
         private void DelDish_OnClick(object sender, RoutedEventArgs e)
         {
-            var dish = GetSelectedDish();
+            var dish = GetSelectedDish;
             if (dish == null)
             {
                 return;
@@ -169,7 +170,7 @@ namespace MealPrepUwp
 
         private void BtnAddIngredient_OnClick(object sender, RoutedEventArgs e)
         {
-            var selectedDish = GetSelectedDish();
+            var selectedDish = GetSelectedDish;
             if (selectedDish == null)
                 return;
 
@@ -200,7 +201,18 @@ namespace MealPrepUwp
 
         private void BtnDelIngredient_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var dishIngredient = GetSelectedDishIngredient;
+
+            if (dishIngredient == null)
+                return;
+
+            using (var db = new ApplicationDbContext())
+            {
+                db.DishIngredients.Remove(dishIngredient);
+                db.SaveChanges();
+
+                UpdateSelectedDish(db);
+            }
         }
 
         private Ingredient GetSelectedIngredient(string text, ApplicationDbContext db)
@@ -208,9 +220,8 @@ namespace MealPrepUwp
             return db.Ingredients.FirstOrDefault(x => x.Name.ToLower() == text);
         }
 
-        private Dish GetSelectedDish()
-        {
-            return DishesList.SelectedItem as Dish;
-        }
+        private Dish GetSelectedDish => DishesList.SelectedItem as Dish;
+
+        private DishIngredient GetSelectedDishIngredient => DishesIngredientsList.SelectedItem as DishIngredient;
     }
 }

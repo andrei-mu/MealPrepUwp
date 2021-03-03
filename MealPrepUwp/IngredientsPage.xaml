@@ -32,63 +32,83 @@
         <StackPanel Grid.Column="1" Background="Aqua">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBox x:Name="IngredientText"
-                         Grid.Row="1"
-                         Grid.Column="0"
-                         Margin="2"
-                         PlaceholderText="Ingredient name"/>
+                <AutoSuggestBox x:Name="IngredientText"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="2,2,2,2"
+                                PlaceholderText="Ingredient name"
+                                TextChanged="IngredientText_OnTextChanged"
+                                VerticalAlignment="Stretch"/>
                 <TextBlock Grid.Row="0"
                          Grid.Column="0"
                          Margin="2"
                          Text="Ingredient name"/>
-                <TextBox x:Name="IngredientContainerSize"
+                <TextBox x:Name="IngredientCaloriesText"
                          Grid.Row="1"
                          Grid.Column="1"
                          Margin="2"
-                         PlaceholderText="C. size"/>
+                         PlaceholderText="Calories"/>
                 <TextBlock Grid.Row="0"
                            Grid.Column="1"
+                           Margin="2"
+                           Text="Calories"/>
+                <TextBox x:Name="IngredientContainerSize"
+                         Grid.Row="1"
+                         Grid.Column="2"
+                         Margin="2"
+                         PlaceholderText="C. size"/>
+                <TextBlock Grid.Row="0"
+                           Grid.Column="2"
                            Margin="2"
                            Text="C. size"/>
                 <TextBox x:Name="IngredientContainerPrice"
                          Grid.Row="1"
-                         Grid.Column="2"
+                         Grid.Column="3"
                          Margin="2"
                          PlaceholderText="C. price"/>
                 <TextBlock Grid.Row="0"
-                           Grid.Column="2"
+                           Grid.Column="3"
                            Margin="2"
                            Text="C. price"/>
-            </Grid>
-            <StackPanel Orientation="Horizontal"
-                        Margin="10,0,10,10">
-                <Button x:Name="BtnMl"
-                        Content="100 ml"
-                        Margin="0,0,10,0"
-                        Click="BtnMl_OnClick">
-                </Button>
-                <Button x:Name="BtnGrams"
-                        Content="100 grams"
-                        Margin="0,0,10,0"
-                        Click="BtnGrams_OnClick"></Button>
-                <Button x:Name="BtnPiece"
-                        Content="Piece"
-                        Margin="0,0,10,0"
-                        Click="BtnPiece_OnClick"></Button>
+                <ComboBox x:Name="IngredientUnit"
+                          Grid.Row="2"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="2"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          Margin="5">
+                    <x:String>100ml</x:String>
+                    <x:String>100 grams</x:String>
+                    <x:String>Bucata</x:String>
+                    <x:String>Felie</x:String>
+                    <x:String>Sticla</x:String>
+                </ComboBox>
+                <Button x:Name="BtnAdd"
+                        Content="Add"
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Margin="5"
+                        HorizontalAlignment="Stretch"
+                        Click="BtnAdd_OnClick"></Button>
                 <Button x:Name="BtnDelete"
                         Content="Delete"
-                        Margin="50,0,10,0"
-                        HorizontalAlignment="Right"
+                        Grid.Row="2"
+                        Grid.Column="3"
+                        Margin="5"
+                        HorizontalAlignment="Stretch"
                         Click="BtnDelete_OnClick"></Button>
-            </StackPanel>
+            </Grid>
         </StackPanel>
     </Grid>
 </Page>

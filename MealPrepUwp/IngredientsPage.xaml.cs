@@ -40,27 +40,28 @@ namespace MealPrepUwp
             if (string.IsNullOrWhiteSpace(userText))
                 return;
 
-            var items = userText.Split(new char[] { ',', '=' });
-            if (items.Length != 2)
-                return;
-
-            if (false == int.TryParse(items[1].Trim(), out var calories))
-                return;
-
-            var name = items[0].Trim();
+            var name = userText.Trim();
             name = name.ToUpper()[0] + name.Substring(1).ToLower();
 
             if (false == int.TryParse(IngredientContainerSize.Text, out var containerSize))
-                return;
+            {
+                containerSize = 1;
+            }
+
             if (false == int.TryParse(IngredientContainerPrice.Text, out var containerPrice))
+            {
+                containerPrice = 0;
+            }
+
+            if (false == int.TryParse(IngredientCaloriesText.Text, out var calorieCount))
                 return;
 
             using (var db = new ApplicationDbContext())
             {
                 var ing = new Ingredient()
                 {
-                    CaloriesPerUnit = calories,
                     Name = name,
+                    CaloriesPerUnit = calorieCount,
                     ContainerSize = containerSize,
                     ContainerPrice = containerPrice,
                     Unit = unit
@@ -71,6 +72,8 @@ namespace MealPrepUwp
 
                 UpdateIngredients(db);
             }
+
+            IngredientCaloriesText.Text = String.Empty;
         }
 
         private void IngredientsPage_OnLoaded(Object sender, RoutedEventArgs e)
@@ -79,21 +82,6 @@ namespace MealPrepUwp
             {
                 UpdateIngredients(db);
             }
-        }
-
-        private void BtnMl_OnClick(object sender, RoutedEventArgs e)
-        {
-            AddIngredient(IngredientUnit.HundredMl);
-        }
-
-        private void BtnGrams_OnClick(object sender, RoutedEventArgs e)
-        {
-            AddIngredient(IngredientUnit.HundredGrams);
-        }
-
-        private void BtnPiece_OnClick(object sender, RoutedEventArgs e)
-        {
-            AddIngredient(IngredientUnit.Piece);
         }
 
         private void BtnDelete_OnClick(object sender, RoutedEventArgs e)
@@ -106,6 +94,57 @@ namespace MealPrepUwp
                     db.SaveChanges();
                     UpdateIngredients(db);
                 }
+            }
+        }
+
+        private void BtnAdd_OnClick(object sender, RoutedEventArgs e)
+        {
+            var tod = IngredientUnit.SelectedItem as string;
+            if (string.IsNullOrWhiteSpace(tod))
+                return;
+
+            switch (tod)
+            {
+                case "100ml":
+                    AddIngredient(Models.IngredientUnit.HundredMl);
+                    return;
+                case "100 grams":
+                    AddIngredient(Models.IngredientUnit.HundredGrams);
+                    return;
+                case "Bucata":
+                    AddIngredient(Models.IngredientUnit.Piece);
+                    return;
+                case "Felie":
+                    AddIngredient(Models.IngredientUnit.Slice);
+                    return;
+                case "Sticla":
+                    AddIngredient(Models.IngredientUnit.Bottle);
+                    return;
+                default:
+                    throw new Exception("Invalid unit");
+            }
+        }
+
+        private void IngredientText_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput)
+                return;
+
+            if (string.IsNullOrWhiteSpace(sender.Text))
+                return;
+
+            var filter = sender.Text.ToLower();
+            using (var db = new ApplicationDbContext())
+            {
+                var suggestion = db.Ingredients
+                    .Where(x => x.Name.ToLower().Contains(filter))
+                    .OrderBy(x => x.Name.ToLower().IndexOf(filter))
+                    .ThenBy(x => x.Name)
+                    .Take(10)
+                    .Select(x => x.Name)
+                    .ToArray();
+
+                sender.ItemsSource = suggestion;
             }
         }
     }
