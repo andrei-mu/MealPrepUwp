@@ -14,14 +14,14 @@ namespace MealPrepUwp.Models
         public string Name { get; set; }
         public int ServingsPerDish { get; set; }
         public string ImageUrl { get; set; }
-        public virtual ICollection<DishIngredient> IngredientQuantities { get; set; }
+        public virtual ICollection<DishIngredient> DishIngredients { get; set; }
 
         [NotMapped]
         public int CalorieCount
         {
             get
             {
-                return IngredientQuantities?.Sum(x => (int)(x.Quantity * x.Ingredient.CaloriesPerUnit + 0.5)) ?? 0;
+                return DishIngredients?.Sum(x => (int)(x.Quantity * x.Ingredient.CaloriesPerUnit + 0.5)) ?? 0;
             }
         }
 

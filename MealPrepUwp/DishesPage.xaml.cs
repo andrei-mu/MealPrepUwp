@@ -32,7 +32,7 @@ namespace MealPrepUwp
 
         private void UpdateDishes(ApplicationDbContext db)
         {
-            DishesList.ItemsSource = db.Dishes.OrderBy(x => x.Name).Include(x => x.IngredientQuantities).ToList();
+            DishesList.ItemsSource = db.Dishes.OrderBy(x => x.Name).Include(x => x.DishIngredients).ToList();
 
             UpdateSelectedDish(db);
         }
@@ -49,11 +49,11 @@ namespace MealPrepUwp
 
             var dish = db.Dishes
                 .Where(x => x.Id == selectedDish.Id)
-                .Include(d => d.IngredientQuantities)
+                .Include(d => d.DishIngredients)
                 .ThenInclude(iq => iq.Ingredient)
                 .FirstOrDefault();
 
-            DishesIngredientsList.ItemsSource = dish?.IngredientQuantities;
+            DishesIngredientsList.ItemsSource = dish?.DishIngredients;
 
             TotalCaloriesText.Text = dish?.CalorieCount.ToString() ?? "0";
             ServingsCountText.Text = dish?.ServingsPerDish.ToString() ?? "0";
@@ -65,7 +65,7 @@ namespace MealPrepUwp
         {
             using (var db = new ApplicationDbContext())
             {
-                UpdateDishes(db);
+                //UpdateDishes(db);
             }
         }
 
@@ -106,7 +106,7 @@ namespace MealPrepUwp
 
             using (var db = new ApplicationDbContext())
             {
-                db.DishIngredients.RemoveRange(dish.IngredientQuantities);
+                db.DishIngredients.RemoveRange(dish.DishIngredients);
                 db.Remove(dish);
 
                 db.SaveChanges();

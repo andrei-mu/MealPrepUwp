@@ -112,7 +112,7 @@ namespace MealPrepUwp
                     .Where(x => x.Id == selectedPlan.Id)
                     .Include(x => x.DailyDishes)
                     .ThenInclude(dd => dd.Dish)
-                    .ThenInclude(d => d.IngredientQuantities)
+                    .ThenInclude(d => d.DishIngredients)
                     .ThenInclude(iq => iq.Ingredient).First();
 
                 selectedPlan = plan;
