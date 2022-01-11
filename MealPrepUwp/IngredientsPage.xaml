@@ -88,7 +88,7 @@
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Center"
                           Margin="5">
-                    <x:String>100ml</x:String>
+                    <x:String>100 ml</x:String>
                     <x:String>100 grams</x:String>
                     <x:String>Bucata</x:String>
                     <x:String>Felie</x:String>

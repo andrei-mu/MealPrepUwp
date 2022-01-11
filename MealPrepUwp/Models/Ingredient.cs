@@ -16,6 +16,12 @@ namespace MealPrepUwp.Models
         Bottle
     };
 
+    public enum IngredientType
+    {
+        Vegetarian,
+        Meat
+    };
+
     public class Ingredient
     {
         public int Id { get; set; }
@@ -24,6 +30,7 @@ namespace MealPrepUwp.Models
         public int CaloriesPerUnit { get; set; }
         public int ContainerSize { get; set; }
         public int ContainerPrice { get; set; }
+        public IngredientUnit Type { get; set; }
 
         [NotMapped]
         public string DisplayName
@@ -49,6 +56,8 @@ namespace MealPrepUwp.Models
                         return "100 gram";
                     case IngredientUnit.HundredMl:
                         return "100 ml";
+                    case IngredientUnit.Bottle:
+                        return "bottle";
                     default:
                         throw new Exception("invalid unit");
                 }

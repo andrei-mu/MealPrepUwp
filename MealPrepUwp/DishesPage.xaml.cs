@@ -65,7 +65,7 @@ namespace MealPrepUwp
         {
             using (var db = new ApplicationDbContext())
             {
-                //UpdateDishes(db);
+                UpdateDishes(db);
             }
         }
 

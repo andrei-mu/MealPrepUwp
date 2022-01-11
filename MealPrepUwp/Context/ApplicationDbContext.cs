@@ -15,6 +15,7 @@ namespace MealPrepUwp.Context
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<DailyDish> DailyDishes { get; set; }
         public DbSet<Models.DailyPlan> DailyPlans { get; set; }
+        public DbSet<Models.WeeklyPlan> WeeklyPlans { get; set; }
 
         public ApplicationDbContext()
         {
@@ -26,7 +27,7 @@ namespace MealPrepUwp.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=mealprep.db");
+            optionsBuilder.UseSqlite("Data Source=mealprep-c.db");
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -63,5 +64,33 @@ namespace MealPrepUwp.Context
             this.SaveChanges();
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Ingredient>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Unit).IsRequired();
+                entity.Property(e => e.CaloriesPerUnit).IsRequired();
+            });
+
+            //modelBuilder.Entity<Publisher>(entity =>
+            //{
+            //    entity.HasKey(e => e.ID);
+            //    entity.Property(e => e.Name).IsRequired();
+            //});
+
+            //modelBuilder.Entity<Book>(entity =>
+            //{
+            //    entity.HasKey(e => e.ISBN);
+            //    entity.Property(e => e.Title).IsRequired();
+            //    entity.HasOne(d => d.Publisher)
+            //        .WithMany(p => p.Books);
+            //});
+        }
+
     }
 }

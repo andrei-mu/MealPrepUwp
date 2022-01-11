@@ -12,23 +12,38 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ListView x:Name="PlansList"
+        <Grid Grid.Column="0"
+              Margin="5"
+              Background="AliceBlue">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListView x:Name="PlansList"
                   Margin="10"
                   BorderBrush="BlueViolet"
                   BorderThickness="2"
-                  Grid.Column="0"
+                  Grid.Row="0"
                   HorizontalContentAlignment="Stretch"
                   SelectionChanged="PlansList_OnSelectionChanged">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Margin="1"
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Margin="1"
                                FontSize="18"
                                Text="{Binding DisplayName}"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <ListView x:Name="DailyPlans"
+            Margin="10"
+            BorderBrush="BlueViolet"
+            BorderThickness="2"
+            Grid.Row="1"
+            HorizontalContentAlignment="Stretch">
+            </ListView>
+        </Grid>
         <Grid Grid.Column="1"
               Margin="5">
             <Grid.RowDefinitions>
@@ -43,9 +58,6 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <DatePicker x:Name="DatePicker"
-                        Margin="5"
-                        Background="BlueViolet"/>
             <TextBox x:Name="PlanNameText"
                      Grid.Row="0"
                      Grid.Column="1"

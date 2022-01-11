@@ -40,12 +40,9 @@ namespace MealPrepUwp
             if (string.IsNullOrWhiteSpace(name))
                 return;
 
-            var planDate = DatePicker.SelectedDate?.DateTime ?? DateTime.Today.Date;
-
             var dailyPlan = new DailyPlan()
             {
                 Name = name,
-                DateTime = planDate
             };
 
             using (var db = new ApplicationDbContext())
@@ -86,7 +83,7 @@ namespace MealPrepUwp
             using (var db = new ApplicationDbContext())
             {
                 var dailyPlans = db.DailyPlans
-                    .OrderBy(x => x.DateTime)
+                    .OrderBy(x => x.Day)
                     .ToArray();
 
                 PlansList.ItemsSource = dailyPlans;

@@ -105,7 +105,7 @@ namespace MealPrepUwp
 
             switch (tod)
             {
-                case "100ml":
+                case "100 ml":
                     AddIngredient(Models.IngredientUnit.HundredMl);
                     return;
                 case "100 grams":

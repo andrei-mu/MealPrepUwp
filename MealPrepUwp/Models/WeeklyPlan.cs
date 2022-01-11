@@ -5,14 +5,13 @@ using System.Linq;
 
 namespace MealPrepUwp.Models
 {
-    public class DailyPlan
+    public class WeeklyPlan
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public DayOfWeek Day { get; set; }
-        public ICollection<DailyDish> DailyDishes { get; set; }
+        public ICollection<DailyPlan> DailyPlans { get; set; }
 
         [NotMapped]
         public string DisplayName
@@ -20,7 +19,7 @@ namespace MealPrepUwp.Models
             get
             {
                 //return $"{DateTime:M} - {Name}";
-                return $"{Name} - {Day}";
+                return $"{Name}";
             }
         }
 
@@ -29,7 +28,7 @@ namespace MealPrepUwp.Models
         {
             get
             {
-                return DailyDishes?.Sum(dd => dd.ServingCalorieCount) ?? 0;
+                return 0; // DailyDishes?.Sum(dd => dd.ServingCalorieCount) ?? 0;
             }
         }
     }
