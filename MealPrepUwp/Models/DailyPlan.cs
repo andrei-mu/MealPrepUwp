@@ -9,18 +9,18 @@ namespace MealPrepUwp.Models
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
-
         public DayOfWeek Day { get; set; }
         public ICollection<DailyDish> DailyDishes { get; set; }
+
+        public int WeeklyPlanId { get; set; }
+        public WeeklyPlan WeeklyPlan { get; set; }
 
         [NotMapped]
         public string DisplayName
         {
             get
             {
-                //return $"{DateTime:M} - {Name}";
-                return $"{Name} - {Day}";
+                return $"{Day}";
             }
         }
 

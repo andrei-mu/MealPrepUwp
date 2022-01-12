@@ -13,7 +13,10 @@ namespace MealPrepUwp.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int ServingsPerDish { get; set; }
-        public string ImageUrl { get; set; }
+
+        public string DishUrl { get; set; }
+
+        public string DishNotes{ get; set; }
         public virtual ICollection<DishIngredient> DishIngredients { get; set; }
 
         [NotMapped]

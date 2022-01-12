@@ -27,7 +27,7 @@ namespace MealPrepUwp.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=mealprep-c.db");
+            optionsBuilder.UseSqlite("Data Source=mealprep-d.db");
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -53,7 +53,7 @@ namespace MealPrepUwp.Context
                 {
                     Name = "Ciorba de fasole",
                     ServingsPerDish = 1,
-                    ImageUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"},
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"},
             };
 
             foreach (var dish in dishes)
