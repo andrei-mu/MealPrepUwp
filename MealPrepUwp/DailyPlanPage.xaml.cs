@@ -31,7 +31,8 @@ namespace MealPrepUwp
             this.InitializeComponent();
         }
 
-        private WeeklyPlan SelectedPlan => PlansList.SelectedItem as WeeklyPlan;
+        private WeeklyPlan SelectedWeeklyPlan => PlansList.SelectedItem as WeeklyPlan;
+        private DailyPlan SelectedDailyPlan => DailyPlans.SelectedItem as DailyPlan;
         public Dish SelectedDish { get; set; }
 
         private void AddDailyPlans(WeeklyPlan weeklyPlan, ApplicationDbContext db)
@@ -73,93 +74,142 @@ namespace MealPrepUwp
                 AddDailyPlans(weeklyPlan, db);
             }
             
-            RefreshPlansList();
+            RefreshWeeklyPlansList();
         }
 
         private void DeletePlanButton_OnClick(object sender, RoutedEventArgs e)
         {
-            /*
-            var selectedPlan = SelectedPlan;
+            var selectedPlan = SelectedWeeklyPlan;
             if (selectedPlan == null)
                 return;
 
             using (var db = new ApplicationDbContext())
             {
-                if (selectedPlan.DailyDishes != null)
+                foreach (var dp in selectedPlan.DailyPlans)
                 {
-                    db.DailyDishes.RemoveRange(selectedPlan.DailyDishes);
+                    db.DailyDishes.RemoveRange(dp.DailyDishes);
                 }
 
+                db.DailyPlans.RemoveRange(selectedPlan.DailyPlans);
                 db.Remove(selectedPlan);
                 db.SaveChanges();
             }
             
-            RefreshPlansList();
-            */
+            RefreshWeeklyPlansList();
         }
 
-        private void RefreshPlansList()
+        private void RefreshWeeklyPlansList()
         {
-            var id = SelectedPlan?.Id;
+            var wid = SelectedWeeklyPlan?.Id;
+            var did = SelectedDailyPlan?.Id;
 
             using (var db = new ApplicationDbContext())
             {
                 var weeklyPlans = db.WeeklyPlans
+                    .Include(x => x.DailyPlans)
+                    .ThenInclude(dd => dd.DailyDishes)
                     .OrderBy(x => x.Name)
                     .ToArray();
 
                 PlansList.ItemsSource = weeklyPlans;
 
-                if (id is int idi)
+                if (wid is int idi)
                 {
                     PlansList.SelectedItem = weeklyPlans.FirstOrDefault(x => x.Id == idi);
-                    RefreshSelectedPlan();
+                    RefreshSelectedWeeklyPlan();
                 }
+            }
+
+            if (!did.HasValue)
+            {
+                did = SelectedWeeklyPlan?.DailyPlans.First()?.Id;
+            }
+
+            RefreshDailyPlan(did);
+        }
+
+        private void RefreshDailyPlan()
+        {
+            RefreshDailyPlan(SelectedDailyPlan?.Id);
+        }
+
+        private void RefreshDailyPlan(int? planId)
+        {
+            if (!planId.HasValue)
+            {
+                return;
+            }
+
+            using (var db = new ApplicationDbContext())
+            {
+                var plan = db.DailyPlans
+                    .Where(x => x.Id == planId)
+                    .Include(x => x.DailyDishes)
+                    .ThenInclude(dd => dd.Dish)
+                    .ThenInclude(d => d.DishIngredients)
+                    .ThenInclude(iq => iq.Ingredient)
+                    .First();
+
+                var selectedPlan = plan;
+
+                PlanDishesList.ItemsSource = selectedPlan.DailyDishes.OrderBy(x => x.MealType).ToArray();
+                CaloriesText.Text = selectedPlan.CaloriesPerDay.ToString();
             }
         }
 
-        private void RefreshSelectedPlan()
+        private void RefreshSelectedWeeklyPlan()
         {
-            var selectedPlan = SelectedPlan;
+            var selectedPlan = SelectedWeeklyPlan;
+            var did = SelectedDailyPlan?.Id;
 
             if (selectedPlan == null)
+            {
+                DailyPlans.ItemsSource = null;
+                PlanDishesList.ItemsSource = null;
+
                 return;
+            }
 
             using (var db = new ApplicationDbContext())
             {
                 var plan = db.WeeklyPlans
                     .Where(x => x.Id == selectedPlan.Id)
-                    //.Include(x => x.DailyDishes)
-                    //.ThenInclude(dd => dd.Dish)
-                    //.ThenInclude(d => d.DishIngredients)
-                    //.ThenInclude(iq => iq.Ingredient)
-                    .First();
+                    .Include(x => x.DailyPlans).First();
 
-                selectedPlan = plan;
+                DailyPlans.ItemsSource = plan.DailyPlans.OrderBy(x => x.Day).ToArray();
             }
-            
-            //PlanDishesList.ItemsSource = selectedPlan.DailyDishes.OrderBy(x => x.MealType).ToArray();
-            //CaloriesText.Text = selectedPlan.CaloriesPerDay.ToString();
+
+            if (!did.HasValue)
+            {
+                did = SelectedWeeklyPlan?.DailyPlans.First()?.Id;
+            }
+
+            if (SelectedWeeklyPlan?.DailyPlans.FirstOrDefault(x => x.Id == did) == null)
+            {
+                did = SelectedWeeklyPlan?.DailyPlans.First()?.Id;
+            }
+
+            RefreshDailyPlan(did);
         }
 
         private void DailyPlanPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            RefreshPlansList();
+            RefreshWeeklyPlansList();
         }
 
         private void PlansList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            RefreshSelectedPlan();
+            RefreshSelectedWeeklyPlan();
         }
 
 
         private void PlanDishesList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            return;
         }
 
         private void SuggestBoxDish_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            /*
             if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput)
                 return;
 
@@ -178,24 +228,20 @@ namespace MealPrepUwp
 
                 SuggestBoxDish.ItemsSource = items;
             }
-            */
         }
 
         private void SuggestBoxDish_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            /*
             if (args.SelectedItem is Dish dish)
             {
                 sender.Text = dish.DisplayName;
                 SelectedDish = dish;
             }
-            */
         }
 
         private void AddDishButton_OnClick(object sender, RoutedEventArgs e)
         {
-            /*
-            if (SelectedPlan == null)
+            if (SelectedDailyPlan == null)
                 return;
 
             if (SelectedDish == null)
@@ -226,7 +272,7 @@ namespace MealPrepUwp
             {
                 MealType = mp,
                 DishId = SelectedDish.Id,
-                DailyPlanId = SelectedPlan.Id
+                DailyPlanId = SelectedDailyPlan.Id
             };
 
             using (var db = new ApplicationDbContext())
@@ -235,13 +281,11 @@ namespace MealPrepUwp
                 db.SaveChanges();
             }
             
-            RefreshPlansList();
-            */
+            RefreshSelectedWeeklyPlan();
         }
 
         private void DeleteDishButton_OnClick(object sender, RoutedEventArgs e)
         {
-            /*
             var dailyDish = PlanDishesList.SelectedItem as DailyDish;
             if (dailyDish == null)
                 return;
@@ -252,8 +296,12 @@ namespace MealPrepUwp
                 db.SaveChanges();
             } 
             
-            RefreshPlansList();
-            */
+            RefreshSelectedWeeklyPlan();
+        }
+
+        private void DailyPlans_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RefreshDailyPlan(SelectedDailyPlan?.Id);
         }
     }
 }

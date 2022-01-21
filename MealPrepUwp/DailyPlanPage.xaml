@@ -41,7 +41,14 @@
             BorderBrush="BlueViolet"
             BorderThickness="2"
             Grid.Row="1"
-            HorizontalContentAlignment="Stretch">
+            HorizontalContentAlignment="Stretch" SelectionChanged="DailyPlans_SelectionChanged" AllowFocusWhenDisabled="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Margin="1"
+                               FontSize="14"
+                               Text="{Binding DisplayName}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
         </Grid>
         <Grid Grid.Column="1"
