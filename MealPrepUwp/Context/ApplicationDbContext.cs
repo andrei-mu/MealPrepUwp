@@ -27,7 +27,7 @@ namespace MealPrepUwp.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=mealprep-d.db");
+            optionsBuilder.UseSqlite("Data Source=mealprep-f.db");
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -35,9 +35,9 @@ namespace MealPrepUwp.Context
         {
             var ingredients = new Ingredient[]
             {
-                new Ingredient() { CaloriesPerUnit = 10, Name = "Rice", ContainerSize = 1, ContainerPrice = 1, Unit = IngredientUnit.HundredGrams},
-                new Ingredient() { CaloriesPerUnit = 20, Name = "Meat", ContainerSize = 1, ContainerPrice = 1, Unit = IngredientUnit.HundredMl},
-                new Ingredient() { CaloriesPerUnit = 30, Name = "Oil", ContainerSize = 1, ContainerPrice = 1, Unit = IngredientUnit.HundredGrams},
+                new Ingredient() { CaloriesPerUnit = 10, Name = "Rice", ContainerSize = 1, ContainerPrice = 10, Unit = IngredientUnit.HundredGrams},
+                new Ingredient() { CaloriesPerUnit = 20, Name = "Meat", ContainerSize = 1, ContainerPrice = 1, Unit = IngredientUnit.HundredGrams},
+                new Ingredient() { CaloriesPerUnit = 800, Name = "Oil", ContainerSize = 1, ContainerPrice = 1, Unit = IngredientUnit.HundredMl},
             };
 
             foreach (var ingredient in ingredients)
@@ -52,8 +52,57 @@ namespace MealPrepUwp.Context
                 new Dish()
                 {
                     Name = "Ciorba de fasole",
+                    ServingsPerDish = 4,
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"
+                },
+                new Dish()
+                {
+                    Name = "Omleta",
                     ServingsPerDish = 1,
-                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"},
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"
+                },
+                new Dish()
+                {
+                    Name = "Cartofi cu curcan",
+                    ServingsPerDish = 2,
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"
+                },
+                new Dish()
+                {
+                    Name = "Salata mare",
+                    ServingsPerDish = 2,
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"
+                },
+                new Dish()
+                {
+                    Name = "Ciorba de pui",
+                    ServingsPerDish = 4,
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"
+                },
+                new Dish()
+                {
+                    Name = "Supa de pui",
+                    ServingsPerDish = 4,
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"
+                },
+                new Dish()
+                {
+                    Name = "Steak",
+                    ServingsPerDish = 2,
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"
+                },
+                new Dish()
+                {
+                    Name = "Orez chinezesc",
+                    ServingsPerDish = 2,
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"
+                },
+                new Dish()
+                {
+                    Name = "Peste prajit",
+                    ServingsPerDish = 2,
+                    DishUrl = "https://thumbor.unica.ro/unsafe/715x566/smart/filters:contrast(8):quality(80)/https://retete.unica.ro/wp-content/uploads/2010/06/ciorba-de-fasole-1-e1505228989189.jpg"
+                },
             };
 
             foreach (var dish in dishes)

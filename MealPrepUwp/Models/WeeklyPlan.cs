@@ -11,6 +11,8 @@ namespace MealPrepUwp.Models
 
         public string Name { get; set; }
 
+        public int PersonCount { get; set; }
+
         public ICollection<DailyPlan> DailyPlans { get; set; }
 
         [NotMapped]
@@ -18,8 +20,7 @@ namespace MealPrepUwp.Models
         {
             get
             {
-                //return $"{DateTime:M} - {Name}";
-                return $"{Name}";
+                return $"{Name} - ({PersonCount} persons)";
             }
         }
 

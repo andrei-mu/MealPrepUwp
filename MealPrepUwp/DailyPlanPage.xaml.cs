@@ -58,9 +58,18 @@ namespace MealPrepUwp
             if (string.IsNullOrWhiteSpace(name))
                 return;
 
+            int personCount = 0;
+            if (false == int.TryParse(this.PlanPersonCountText.Text, out personCount))
+            {
+                return;
+            }
+
+
+
             var weeklyPlan = new WeeklyPlan()
             {
                 Name = name,
+                PersonCount = personCount
             };
 
             using (var db = new ApplicationDbContext())
@@ -128,11 +137,6 @@ namespace MealPrepUwp
             RefreshDailyPlan(did);
         }
 
-        private void RefreshDailyPlan()
-        {
-            RefreshDailyPlan(SelectedDailyPlan?.Id);
-        }
-
         private void RefreshDailyPlan(int? planId)
         {
             if (!planId.HasValue)
@@ -151,18 +155,21 @@ namespace MealPrepUwp
                     .First();
 
                 var selectedPlan = plan;
+                DailyPlans.SelectedItem = plan;
 
                 PlanDishesList.ItemsSource = selectedPlan.DailyDishes.OrderBy(x => x.MealType).ToArray();
-                CaloriesText.Text = selectedPlan.CaloriesPerDay.ToString();
+
+                int personCount = SelectedWeeklyPlan.PersonCount;
+                CaloriesText.Text = (selectedPlan.CaloriesPerDay/personCount).ToString();
             }
         }
 
         private void RefreshSelectedWeeklyPlan()
         {
-            var selectedPlan = SelectedWeeklyPlan;
+            var selectedWeeklyPlan = SelectedWeeklyPlan;
             var did = SelectedDailyPlan?.Id;
 
-            if (selectedPlan == null)
+            if (selectedWeeklyPlan == null)
             {
                 DailyPlans.ItemsSource = null;
                 PlanDishesList.ItemsSource = null;
@@ -173,20 +180,24 @@ namespace MealPrepUwp
             using (var db = new ApplicationDbContext())
             {
                 var plan = db.WeeklyPlans
-                    .Where(x => x.Id == selectedPlan.Id)
+                    .Where(x => x.Id == selectedWeeklyPlan.Id)
                     .Include(x => x.DailyPlans).First();
 
-                DailyPlans.ItemsSource = plan.DailyPlans.OrderBy(x => x.Day).ToArray();
-            }
+                var dailyPlans = plan.DailyPlans.OrderBy(x => x.Day).ToArray();
+                DailyPlans.ItemsSource = dailyPlans;
 
-            if (!did.HasValue)
-            {
-                did = SelectedWeeklyPlan?.DailyPlans.First()?.Id;
-            }
+                var prevPlan = dailyPlans.FirstOrDefault(x => x.Id == did);
 
-            if (SelectedWeeklyPlan?.DailyPlans.FirstOrDefault(x => x.Id == did) == null)
-            {
-                did = SelectedWeeklyPlan?.DailyPlans.First()?.Id;
+                if (prevPlan == null)
+                {
+                    this.DailyPlans.SelectedItem = dailyPlans[0];
+                    did = dailyPlans[0].Id;
+                }
+                else
+                {
+                    this.DailyPlans.SelectedItem = prevPlan;
+                    did = prevPlan.Id;
+                }
             }
 
             RefreshDailyPlan(did);
